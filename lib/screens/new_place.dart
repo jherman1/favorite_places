@@ -1,4 +1,3 @@
-import 'package:favorite_places/main.dart';
 import 'package:favorite_places/models/place.dart';
 import 'package:favorite_places/providers/places_provider.dart';
 import 'package:flutter/material.dart';
@@ -9,20 +8,16 @@ class NewPlaceScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final favoritPlaces = ref.watch(favoritePlacesProvider);
+    final formKey = GlobalKey<FormState>();
 
-    final _formKey = GlobalKey<FormState>();
-
-    var _enteredTitle = '';
-
-    void _savePlace() {}
+    var enteredTitle = '';
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add a new Place'),
       ),
       body: Form(
-        key: _formKey,
+        key: formKey,
         child: Column(
           children: [
             TextFormField(
@@ -41,17 +36,17 @@ class NewPlaceScreen extends ConsumerWidget {
                 return null;
               },
               onSaved: (value) {
-                _enteredTitle = value!;
+                enteredTitle = value!;
               },
             ),
             ElevatedButton(
               onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  _formKey.currentState!.save(); //executes all onSaved()
+                if (formKey.currentState!.validate()) {
+                  formKey.currentState!.save(); //executes all onSaved()
                 }
-                var wasAdded = ref
+                ref
                     .read(favoritePlacesProvider.notifier)
-                    .addFavoritePlace(Place(title: _enteredTitle));
+                    .addFavoritePlace(Place(title: enteredTitle));
 
                 Navigator.of(context).pop();
               },
