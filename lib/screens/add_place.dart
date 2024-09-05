@@ -1,16 +1,34 @@
+import 'package:favorite_places/models/place.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AddPlaceScreen extends StatefulWidget {
+import 'package:favorite_places/providers/places_provider.dart';
+
+class AddPlaceScreen extends ConsumerStatefulWidget {
   const AddPlaceScreen({super.key});
 
   @override
-  State<AddPlaceScreen> createState() {
+  ConsumerState<AddPlaceScreen> createState() {
     return _AddPlaceScreenState();
   }
 }
 
-class _AddPlaceScreenState extends State<AddPlaceScreen> {
+class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
   final _titleController = TextEditingController();
+
+  void _savePlace() {
+    final enteredTitle = _titleController.text;
+
+    if (enteredTitle == null || enteredTitle.isEmpty) {
+      return;
+    }
+
+    ref
+        .read(favoritePlacesProvider.notifier)
+        .addFavoritePlace(Place(title: enteredTitle));
+
+    Navigator.of(context).pop();
+  }
 
   @override
   void dispose() {
@@ -37,7 +55,7 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
             ),
             const SizedBox(height: 16),
             ElevatedButton.icon(
-              onPressed: () {},
+              onPressed: _savePlace,
               icon: const Icon(Icons.add),
               label: const Text('Add Palace'),
             ),
