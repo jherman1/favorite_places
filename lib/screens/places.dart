@@ -1,4 +1,5 @@
 import 'package:favorite_places/models/place.dart';
+import 'package:favorite_places/screens/add_place.dart';
 import 'package:favorite_places/screens/new_place.dart';
 import 'package:favorite_places/widgets/places_list.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,11 @@ class PlacesScreen extends ConsumerStatefulWidget {
 }
 
 class _PlacesScreenState extends ConsumerState<PlacesScreen> {
-  void _addPlace() async {
+
+  /// Following Solution Video 240, implemented the anonymous function, in build(), 
+  /// below to use screens/add_place.dart instead of my self implemented 
+  /// screens/new_place.dart which is called in this function.
+  void _addNewPlace() async {
     final newPlace = await Navigator.of(context).push<Place>(
       MaterialPageRoute(
         builder: (ctx) => const NewPlaceScreen(),
@@ -36,7 +41,10 @@ class _PlacesScreenState extends ConsumerState<PlacesScreen> {
         title: const Text('Favorite Places List'),
         actions: [
           IconButton(
-            onPressed: _addPlace,
+            // onPressed: _addNewPlace, ///Removed b/c of explanation above ^^
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const AddPlaceScreen()));
+            },
             icon: const Icon(Icons.add),
           )
         ],
