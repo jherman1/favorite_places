@@ -5,16 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:favorite_places/providers/places_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class PlacesListScreen extends ConsumerStatefulWidget {
-  const PlacesListScreen({super.key});
+class PlacesScreen extends ConsumerStatefulWidget {
+  const PlacesScreen({super.key});
 
   @override
-  ConsumerState<PlacesListScreen> createState() {
-    return _PlacesListScreenState();
+  ConsumerState<PlacesScreen> createState() {
+    return _PlacesScreenState();
   }
 }
 
-class _PlacesListScreenState extends ConsumerState<PlacesListScreen> {
+class _PlacesScreenState extends ConsumerState<PlacesScreen> {
   void _addPlace() async {
     final newPlace = await Navigator.of(context).push<Place>(
       MaterialPageRoute(

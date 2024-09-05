@@ -11,7 +11,7 @@ final colorScheme = ColorScheme.fromSeed(
 );
 
 final theme = ThemeData().copyWith(
-  scaffoldBackgroundColor: colorScheme.background,
+  scaffoldBackgroundColor: colorScheme.surface,
   colorScheme: colorScheme,
   textTheme: GoogleFonts.ubuntuCondensedTextTheme().copyWith(
     titleSmall: GoogleFonts.ubuntuCondensed(
@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Great Places',
       theme: theme,
-      home: const PlacesListScreen(),
+      home: const PlacesScreen(),
     );
   }
 }
