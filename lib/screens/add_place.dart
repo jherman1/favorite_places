@@ -19,7 +19,7 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
   void _savePlace() {
     final enteredTitle = _titleController.text;
 
-    if (enteredTitle == null || enteredTitle.isEmpty) {
+    if (enteredTitle.isEmpty) {
       return;
     }
 
