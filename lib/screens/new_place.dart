@@ -44,9 +44,9 @@ class NewPlaceScreen extends ConsumerWidget {
                 if (formKey.currentState!.validate()) {
                   formKey.currentState!.save(); //executes all onSaved()
                 }
-                ref
-                    .read(favoritePlacesProvider.notifier)
-                    .addFavoritePlace(Place(title: enteredTitle));
+                // ref
+                //     .read(favoritePlacesProvider.notifier)
+                //     .addFavoritePlace(Place(title: enteredTitle));
 
                 Navigator.of(context).pop();
               },
