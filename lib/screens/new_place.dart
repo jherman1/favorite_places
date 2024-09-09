@@ -1,5 +1,5 @@
-import 'package:favorite_places/models/place.dart';
-import 'package:favorite_places/providers/places_provider.dart';
+// import 'package:favorite_places/models/place.dart';
+// import 'package:favorite_places/providers/places_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -10,7 +10,7 @@ class NewPlaceScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final formKey = GlobalKey<FormState>();
 
-    var enteredTitle = '';
+    // var enteredTitle = '';
 
     return Scaffold(
       appBar: AppBar(
@@ -36,7 +36,7 @@ class NewPlaceScreen extends ConsumerWidget {
                 return null;
               },
               onSaved: (value) {
-                enteredTitle = value!;
+                // enteredTitle = value!;
               },
             ),
             ElevatedButton(
