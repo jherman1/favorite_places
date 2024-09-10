@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 
 class LocationInput extends StatefulWidget {
-  const LocationInput({super.key});
+  LocationInput({super.key, required this.onSetLocationData});
+
+  void Function(LocationData locationData) onSetLocationData;
 
   @override
   State<LocationInput> createState() {
@@ -11,7 +13,7 @@ class LocationInput extends StatefulWidget {
 }
 
 class _LocationInputState extends State<LocationInput> {
-  Location? _pickedLocation;
+  LocationData? _pickedLocationData;
   var _isGettingLocation = false;
 
   void _getCurrentLocation() async {
@@ -45,15 +47,15 @@ class _LocationInputState extends State<LocationInput> {
 
     setState(() {
       _isGettingLocation = false;
+      _pickedLocationData = locationData;
     });
 
-    print(locationData.latitude);
-    print(locationData.longitude);
+    widget.onSetLocationData(_pickedLocationData!);
   }
 
   @override
   Widget build(BuildContext context) {
-    Widget previewContnet = Text(
+    Widget previewContent = Text(
       'No Location Chosen',
       textAlign: TextAlign.center,
       style: Theme.of(context)
@@ -63,7 +65,27 @@ class _LocationInputState extends State<LocationInput> {
     );
 
     if (_isGettingLocation) {
-      previewContnet = CircularProgressIndicator();
+      previewContent = const CircularProgressIndicator();
+    }
+
+    if (_pickedLocationData != null) {
+      previewContent = Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(
+            Icons.location_on_outlined,
+            color: Colors.white,
+          ),
+          Text(
+            '${_pickedLocationData!.latitude}, ${_pickedLocationData!.longitude}',
+            textAlign: TextAlign.center,
+            style: Theme.of(context)
+                .textTheme
+                .headlineLarge!
+                .copyWith(color: Theme.of(context).colorScheme.onSurface),
+          ),
+        ],
+      );
     }
 
     return Column(
@@ -76,7 +98,7 @@ class _LocationInputState extends State<LocationInput> {
             border: Border.all(
                 width: 1, color: Theme.of(context).colorScheme.primary),
           ),
-          child: previewContnet,
+          child: previewContent,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
