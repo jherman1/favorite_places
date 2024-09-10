@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
+import 'package:http/http.dart' as http;
 
 class LocationInput extends StatefulWidget {
   const LocationInput({super.key, required this.onSetLocationData});
@@ -44,7 +47,23 @@ class _LocationInputState extends State<LocationInput> {
     });
 
     locationData = await location.getLocation();
-
+    
+    /// The following code is from videos 252-... for implementing Google Maps API, 
+    /// which I didn't fully do as it requires creating an account and signing up with
+    /// a credit card (although free use credits are provided upon sign-up).
+    /// For Full Implementation: 
+    ///   - Set googleMapsAPIKey with actual api key
+    ///   - Uncomment code containing get request, json decoding, and extracting the address
+    final lat = locationData.latitude;
+    final lng = locationData.longitude;
+    const googleMapsApiKey = 'YOUR_API_KEY';
+    final url = Uri.parse(
+        'https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lng&key=$googleMapsApiKey');
+    // final response = await http.get(url);
+    // final resData = json.decode(response.body);
+    // final address = resData['results'][0]['formattted_address'];
+    const address = '123 Fake Address Street, Nowheresville, Lala land';
+    
     setState(() {
       _isGettingLocation = false;
       _pickedLocationData = locationData;
