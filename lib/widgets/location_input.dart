@@ -20,6 +20,18 @@ class _LocationInputState extends State<LocationInput> {
   PlaceLocation? _pickedPlaceLocation;
   var _isGettingLocation = false;
 
+  /// This code is from video 255 (using Google Static Maps API for getting an image of a location)
+  /// For full implementation, add a valid googleMapsApiKey.
+  String get locationImage {
+    if (_pickedPlaceLocation == null) {
+      return '';
+    }
+    final lat = _pickedPlaceLocation!.latitude;
+    final lng = _pickedPlaceLocation!.longitude;
+    const googleMapsApiKey = 'YOUR_API_KEY';
+    return 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=16&size=600x300&maptype=roadmap&markers=color:red%7Clabel:A%7C$lat,$lng&key=$googleMapsApiKey';
+  }
+
   void _getCurrentLocation() async {
     Location location = Location();
 
@@ -49,7 +61,7 @@ class _LocationInputState extends State<LocationInput> {
 
     locationData = await location.getLocation();
 
-    /// The following code is from videos 252-... for implementing Google Maps API,
+    /// The following code is from videos 252-254 for implementing Google Maps API,
     /// which I didn't fully do as it requires creating an account and signing up with
     /// a credit card (although free use credits are provided upon sign-up).
     /// For Full Implementation:
@@ -62,7 +74,7 @@ class _LocationInputState extends State<LocationInput> {
     final lat = locationData.latitude;
     final lng = locationData.longitude;
 
-    if(lat == null || lng == null) {
+    if (lat == null || lng == null) {
       return;
     }
 
@@ -98,6 +110,16 @@ class _LocationInputState extends State<LocationInput> {
     }
 
     if (_pickedPlaceLocation != null) {
+      /// This code is from Video 255, for implementing the Google Maps Static API (getting a map image of a location). 
+      /// For full implementation, uncomment the following Image.network(...) code, and remove the temporary setting of 
+      /// previewContent (the lines following the commented out Image.network(...) code).
+      // previewContent = Image.network(
+      //   locationImage,
+      //   fit: BoxFit.cover,
+      //   width: double.infinity,
+      //   height: double.infinity,
+      // );
+
       previewContent = Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
