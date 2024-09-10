@@ -1,13 +1,14 @@
-import 'dart:convert';
+// import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
-import 'package:http/http.dart' as http;
+// import 'package:http/http.dart' as http;
+import 'package:favorite_places/models/place.dart';
 
 class LocationInput extends StatefulWidget {
-  const LocationInput({super.key, required this.onSetLocationData});
+  const LocationInput({super.key, required this.onSetPlaceLocation});
 
-  final void Function(LocationData locationData) onSetLocationData;
+  final void Function(PlaceLocation placeLocation) onSetPlaceLocation;
 
   @override
   State<LocationInput> createState() {
@@ -16,7 +17,7 @@ class LocationInput extends StatefulWidget {
 }
 
 class _LocationInputState extends State<LocationInput> {
-  LocationData? _pickedLocationData;
+  PlaceLocation? _pickedPlaceLocation;
   var _isGettingLocation = false;
 
   void _getCurrentLocation() async {
@@ -47,29 +48,38 @@ class _LocationInputState extends State<LocationInput> {
     });
 
     locationData = await location.getLocation();
-    
-    /// The following code is from videos 252-... for implementing Google Maps API, 
+
+    /// The following code is from videos 252-... for implementing Google Maps API,
     /// which I didn't fully do as it requires creating an account and signing up with
     /// a credit card (although free use credits are provided upon sign-up).
-    /// For Full Implementation: 
+    /// For Full Implementation:
+    ///   - Uncomment code containing api key, url, get request, json decoding, and extracting the address
     ///   - Set googleMapsAPIKey with actual api key
-    ///   - Uncomment code containing get request, json decoding, and extracting the address
+    ///   - Uncomment imports for:
+    ///       - 'dart:convert'
+    ///       - 'package:http/http.dart' as http
+    ///   - Add neccessary response error checks once implemented
     final lat = locationData.latitude;
     final lng = locationData.longitude;
-    const googleMapsApiKey = 'YOUR_API_KEY';
-    final url = Uri.parse(
-        'https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lng&key=$googleMapsApiKey');
+
+    if(lat == null || lng == null) {
+      return;
+    }
+
+    // const googleMapsApiKey = 'YOUR_API_KEY';
+    // final url = Uri.parse('https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lng&key=$googleMapsApiKey');
     // final response = await http.get(url);
     // final resData = json.decode(response.body);
     // final address = resData['results'][0]['formattted_address'];
     const address = '123 Fake Address Street, Nowheresville, Lala land';
-    
+
     setState(() {
       _isGettingLocation = false;
-      _pickedLocationData = locationData;
+      _pickedPlaceLocation =
+          PlaceLocation(latitude: lat, longitude: lng, address: address);
     });
 
-    widget.onSetLocationData(_pickedLocationData!);
+    widget.onSetPlaceLocation(_pickedPlaceLocation!);
   }
 
   @override
@@ -87,16 +97,29 @@ class _LocationInputState extends State<LocationInput> {
       previewContent = const CircularProgressIndicator();
     }
 
-    if (_pickedLocationData != null) {
-      previewContent = Row(
+    if (_pickedPlaceLocation != null) {
+      previewContent = Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(
-            Icons.location_on_outlined,
-            color: Colors.white,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(
+                Icons.location_on_outlined,
+                color: Colors.white,
+              ),
+              Text(
+                '${_pickedPlaceLocation!.latitude}, ${_pickedPlaceLocation!.longitude}',
+                textAlign: TextAlign.center,
+                style: Theme.of(context)
+                    .textTheme
+                    .headlineLarge!
+                    .copyWith(color: Theme.of(context).colorScheme.onSurface),
+              ),
+            ],
           ),
           Text(
-            '${_pickedLocationData!.latitude}, ${_pickedLocationData!.longitude}',
+            _pickedPlaceLocation!.address,
             textAlign: TextAlign.center,
             style: Theme.of(context)
                 .textTheme

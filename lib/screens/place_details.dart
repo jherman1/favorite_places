@@ -1,5 +1,5 @@
-import 'package:favorite_places/models/place.dart';
 import 'package:flutter/material.dart';
+import 'package:favorite_places/models/place.dart';
 
 class PlaceDetailsScreen extends StatelessWidget {
   const PlaceDetailsScreen({super.key, required this.place});
@@ -22,15 +22,29 @@ class PlaceDetailsScreen extends StatelessWidget {
           ),
           Container(
             color: Colors.black54,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(
-                  Icons.location_on_outlined,
-                  color: Colors.white,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.location_on_outlined,
+                      color: Colors.white,
+                    ),
+                    Text(
+                      '${place.location.latitude}, ${place.location.longitude}',
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context)
+                          .textTheme
+                          .headlineLarge!
+                          .copyWith(
+                              color: Theme.of(context).colorScheme.onSurface),
+                    ),
+                  ],
                 ),
                 Text(
-                  '${place.locationData.latitude}, ${place.locationData.longitude}',
+                  place.location.address,
                   textAlign: TextAlign.center,
                   style: Theme.of(context)
                       .textTheme
