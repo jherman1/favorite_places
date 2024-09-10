@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 
 class LocationInput extends StatefulWidget {
-  LocationInput({super.key, required this.onSetLocationData});
+  const LocationInput({super.key, required this.onSetLocationData});
 
-  void Function(LocationData locationData) onSetLocationData;
+  final void Function(LocationData locationData) onSetLocationData;
 
   @override
   State<LocationInput> createState() {
