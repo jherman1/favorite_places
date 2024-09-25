@@ -58,7 +58,13 @@ class _MapScreenState extends State<MapScreen> {
                 ),
               },
             )
-          : const Text('Not Implemented'),
+          : Text(
+              'Not Implemented',
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+            ),
     );
   }
 }
