@@ -1,6 +1,8 @@
 // import 'dart:convert';
 
+import 'package:favorite_places/screens/map.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 // import 'package:http/http.dart' as http;
 import 'package:favorite_places/models/place.dart';
@@ -32,6 +34,34 @@ class _LocationInputState extends State<LocationInput> {
     return 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=16&size=600x300&maptype=roadmap&markers=color:red%7Clabel:A%7C$lat,$lng&key=$googleMapsApiKey';
   }
 
+  Future<void> _savePlace(double lat, double lng) async {
+    /// The following code is from videos 252-254, 262 for implementing Google Maps API,
+    /// which I didn't fully do as it requires creating an account and signing up with
+    /// a credit card (although free use credits are provided upon sign-up).
+    /// For Full Implementation:
+    ///   - Uncomment code containing api key, url, get request, json decoding, and extracting the address
+    ///   - Set googleMapsAPIKey with actual api key
+    ///   - Uncomment imports for:
+    ///       - 'dart:convert'
+    ///       - 'package:http/http.dart' as http
+    ///   - Add neccessary response error checks once implemented
+
+    // const googleMapsApiKey = 'YOUR_API_KEY';
+    // final url = Uri.parse('https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lng&key=$googleMapsApiKey');
+    // final response = await http.get(url);
+    // final resData = json.decode(response.body);
+    // final address = resData['results'][0]['formattted_address'];
+    const address = '123 Fake Address Street, Nowheresville, Lala land';
+
+    setState(() {
+      _pickedPlaceLocation =
+          PlaceLocation(latitude: lat, longitude: lng, address: address);
+      _isGettingLocation = false;
+    });
+
+    widget.onSetPlaceLocation(_pickedPlaceLocation!);
+  }
+
   void _getCurrentLocation() async {
     Location location = Location();
 
@@ -61,16 +91,6 @@ class _LocationInputState extends State<LocationInput> {
 
     locationData = await location.getLocation();
 
-    /// The following code is from videos 252-254 for implementing Google Maps API,
-    /// which I didn't fully do as it requires creating an account and signing up with
-    /// a credit card (although free use credits are provided upon sign-up).
-    /// For Full Implementation:
-    ///   - Uncomment code containing api key, url, get request, json decoding, and extracting the address
-    ///   - Set googleMapsAPIKey with actual api key
-    ///   - Uncomment imports for:
-    ///       - 'dart:convert'
-    ///       - 'package:http/http.dart' as http
-    ///   - Add neccessary response error checks once implemented
     final lat = locationData.latitude;
     final lng = locationData.longitude;
 
@@ -78,20 +98,21 @@ class _LocationInputState extends State<LocationInput> {
       return;
     }
 
-    // const googleMapsApiKey = 'YOUR_API_KEY';
-    // final url = Uri.parse('https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lng&key=$googleMapsApiKey');
-    // final response = await http.get(url);
-    // final resData = json.decode(response.body);
-    // final address = resData['results'][0]['formattted_address'];
-    const address = '123 Fake Address Street, Nowheresville, Lala land';
+    _savePlace(lat, lng);
+  }
 
-    setState(() {
-      _isGettingLocation = false;
-      _pickedPlaceLocation =
-          PlaceLocation(latitude: lat, longitude: lng, address: address);
-    });
+  void _selectOnMap() async {
+    final pickedLocation = await Navigator.of(context).push<LatLng>(
+      MaterialPageRoute(
+        builder: (ctx) => const MapScreen(),
+      ),
+    );
 
-    widget.onSetPlaceLocation(_pickedPlaceLocation!);
+    if (pickedLocation == null) {
+      return;
+    }
+
+    _savePlace(pickedLocation.latitude, pickedLocation.longitude);
   }
 
   @override
@@ -110,8 +131,8 @@ class _LocationInputState extends State<LocationInput> {
     }
 
     if (_pickedPlaceLocation != null) {
-      /// This code is from Video 255, for implementing the Google Maps Static API (getting a map image of a location). 
-      /// For full implementation, uncomment the following Image.network(...) code, and remove the temporary setting of 
+      /// This code is from Video 255, for implementing the Google Maps Static API (getting a map image of a location).
+      /// For full implementation, uncomment the following Image.network(...) code, and remove the temporary setting of
       /// previewContent (the lines following the commented out Image.network(...) code).
       // previewContent = Image.network(
       //   locationImage,
@@ -175,7 +196,16 @@ class _LocationInputState extends State<LocationInput> {
             TextButton.icon(
               icon: const Icon(Icons.map),
               label: const Text('Select on Map'),
-              onPressed: () {},
+              onPressed: () {
+                ScaffoldMessenger.of(context).clearSnackBars();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('SELECT ON MAP NOT IMPLEMENTED'),
+                    duration: Duration(milliseconds: 1750),
+                  ),
+                );
+                _selectOnMap();
+              },
             ),
           ],
         )

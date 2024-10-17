@@ -37,13 +37,15 @@ class _MapScreenState extends State<MapScreen> {
           if (widget.isSelecting)
             IconButton(
               icon: const Icon(Icons.save),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pop(_pickedLocation);
+              },
             ),
         ],
       ),
       body: googleMapsFullyImplemented
           ? GoogleMap(
-              onTap: (position) {
+              onTap: !widget.isSelecting ? null : (position) {
                 setState(() {
                   _pickedLocation = position;
                 });
@@ -67,13 +69,15 @@ class _MapScreenState extends State<MapScreen> {
                 ),
               },
             )
-          : Text(
-              'Not Implemented',
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
-            ),
+          : Center(
+            child: Text(
+                'Map Screen Not Implemented',
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
+              ),
+          ),
     );
   }
 }
